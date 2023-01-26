@@ -131,6 +131,10 @@ def unlisten_frames(callback_id):
     cepton_sdk.core._frames_callback.unlisten(callback_id)
 
 
+def mock_network_receive(header, timestamp, data, data_size):
+    cepton_sdk.core.mock_network_receive(header, timestamp, data, data_size)
+
+
 def _wait_on_func(func, timeout=None):
     if timeout is not None:
         t_start = get_timestamp()

@@ -439,4 +439,11 @@ add_c_error_check(c_capture_replay_resume)
 c_capture_replay_pause = lib.cepton_sdk_capture_replay_pause
 add_c_error_check(c_capture_replay_pause)
 
+c_mock_network_receive = lib.cepton_sdk_mock_network_receive
+c_mock_network_receive.argtypes = [C_SensorHandle, c_int64, POINTER(c_uint8), c_size_t]
+add_c_error_check(c_mock_network_receive)
+
 __all__ = _all_builder.get()
+
+
+

@@ -1,5 +1,6 @@
 import atexit
 import collections
+import ctypes
 import enum
 import threading
 import warnings
@@ -133,6 +134,11 @@ def get_frame_mode():
     return FrameMode(cepton_sdk.c.c_get_frame_mode())
 
 
+def mock_network_receive(header, timestamp, data, data_size):
+    d = (ctypes.c_uint8 * data_size)(*data)
+    cepton_sdk.c.c_mock_network_receive(ctypes.c_uint64(header), ctypes.c_int64(timestamp), d, data_size)
+
+
 class _Callback:
     def __init__(self):
         self._lock = threading.Lock()
@@ -178,10 +184,8 @@ class _FramesCallback(_Callback):
         self.clear()
 
     def _on_frame(self, sensor_handle, n_points, c_image_points_ptr):
-        sensor_info = \
-            cepton_sdk.sensor.get_sensor_information_by_handle(sensor_handle)
         points = cepton_sdk.point.Points.from_c(n_points, c_image_points_ptr)
-        self._on_callback(sensor_info, points)
+        self._on_callback(sensor_handle, points)
 
 
 _frames_callback = _FramesCallback()
